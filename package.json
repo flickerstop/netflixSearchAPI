@@ -1,0 +1,11 @@
+{
+  "name": "netflixsearchapi",
+  "version": "0.1.0",
+  "description": "A simple API to search for netflix shows and movies",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "flickerstop",
+  "license": "ISC"
+}
