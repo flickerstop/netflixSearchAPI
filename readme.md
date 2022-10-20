@@ -5,21 +5,22 @@ This is based on the data provided by [kaggle datasets](https://www.kaggle.com/d
 ```
 npm install
 ```
-Also requires MongoDB running on localhost on port 27017 but that can be changed in `src/modules/databaseManager.js`.
+Also requires MongoDB running on localhost on port 27017 but that can be changed in `src/modules/databaseManager.js` line 25.
 
-### Run the app
+### Run the Server
 ```
 npm start
 ```
 
 ### Run the tests
+Runs 25 GET/POST tests and evaluates the responses to make sure they have correct values.
 ```
 npm test
 ```
 
 
 # REST API
-The REST API can be access two ways. The first is by GET which is much simpler but does not allow filtering by multiple properties. The second is POST which allows filtering.
+The REST API can be access two ways. The first is by GET which is much simpler but does not allow filtering by multiple properties, these also require exact matches on titles and actor names. The second is POST which allows filtering and searches.
 
 # GET
 
