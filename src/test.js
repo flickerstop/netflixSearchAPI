@@ -1,4 +1,3 @@
-
 const axios = require("axios");
 const console = require("./modules/personal/jrConsole");
 
@@ -34,8 +33,7 @@ createPOSTTest('NetflixAPI/titles',{release_year: 2010,type: "SHOW"},19);
 createPOSTTest('NetflixAPI/titles',{age_certification:"R"},556);
 createPOSTTest('NetflixAPI/titles',{genres:"crime"},936);
 createPOSTTest('NetflixAPI/titles',{genres:["drama","crime"]},651);
-
-
+createGETTest(`NetflixAPI/titles/byActor/232`,0);
 
 /**
  * Created an automated POST test and validates the response

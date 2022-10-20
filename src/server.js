@@ -24,7 +24,9 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.urlencoded({ extended: true , limit: '8mb'}));
 
 // Create the database
-databaseManager.createDB();
+databaseManager.createDB().catch((err)=>{
+    console.error("Connecting to DB",err);
+});
 
 
 /***********************************************************

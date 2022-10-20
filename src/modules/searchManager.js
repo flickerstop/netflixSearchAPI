@@ -10,7 +10,7 @@ module.exports = class{
      * @param {Object} content Request body to parse for search options
      * @returns {Promise<{titles:Object,credits:Object}>} Search options to pass to mongo
      */
-    static build(content){
+    static buildSearchObjects(content){
         // options to search titles
         let titleSearchOptions = {};
 
@@ -97,7 +97,7 @@ module.exports = class{
     static getTitles(content){
         return new Promise(async (resolve,reject)=>{
             // Build the search options
-            let searchOptions = this.build(content);
+            let searchOptions = this.buildSearchObjects(content);
 
 
             // Search the database for all the tiles that match the search criteria
@@ -118,7 +118,7 @@ module.exports = class{
      static getCredits(content){
         return new Promise(async (resolve,reject)=>{
             // Build the search options
-            let searchOptions = this.build(content);
+            let searchOptions = this.buildSearchObjects(content);
 
             // Search the database for all the credits that match the search criteria
             databaseManager.searchCredits(searchOptions.titles,searchOptions.credits).then((searchData)=>{

@@ -11,7 +11,7 @@ I typically have them in their own private project then use `npm link` to access
 This is a module that improves upon the standard `console` and adds some nice formatting options for easier debugging.
 
 ### jrCSV
-Used to convert a CSV file into a JSON object.
+Used to convert a CSV file into an array of JSON objects.
 
 ### jrMongo
 Contains a bunch of useful functions that return promises to interact with MongoDB 

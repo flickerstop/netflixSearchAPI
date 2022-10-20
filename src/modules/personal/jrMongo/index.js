@@ -1,5 +1,3 @@
-// Check if jrConsole is loadable
-const path = require("path");
 
 let console = require("../jrConsole");
 
