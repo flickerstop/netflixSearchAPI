@@ -103,15 +103,15 @@ module.exports = class{
 
     /**
      * Searches for titles that match all the search criteria
-     * @param {Object} titlesSearchOption Search options for titles
+     * @param {Object} titlesSearchOptions Search options for titles
      * @param {Object} creditsSearchOptions Search options for credits
      * @returns {Array} Array of title objects
      */
-    static searchTitles(titlesSearchOption, creditsSearchOptions = null){
+    static searchTitles(titlesSearchOptions, creditsSearchOptions = null){
         return new Promise(async (resolve,reject)=>{
 
             // Find all the titles with this search criteria
-            findTitlesFromSearch(titlesSearchOption,creditsSearchOptions).then((titles)=>{
+            findTitlesFromSearch(titlesSearchOptions,creditsSearchOptions).then((titles)=>{
                 return resolve(titles);
             }).catch((err)=>{
                 return reject(err);
@@ -122,20 +122,50 @@ module.exports = class{
 
     /**
      * Searches for credits that match all the search criteria
-     * @param {Object} titlesSearchOption Search options for titles
+     * @param {Object} titlesSearchOptions Search options for titles
      * @param {Object} creditsSearchOptions Search options for credits
      * @returns {Array} Array of credit objects
      */
-    static searchCredits(titlesSearchOption, creditsSearchOptions = null){
+    static searchCredits(titlesSearchOptions, creditsSearchOptions = null){
         return new Promise(async (resolve,reject)=>{
 
             // Find all the titles with this search criteria
-            findTitlesFromSearch(titlesSearchOption,creditsSearchOptions).then(async (titles)=>{
+            findTitlesFromSearch(titlesSearchOptions,creditsSearchOptions).then(async (titles)=>{
 
                 // Find all the actors/directors for these movies
                 let credits = await jrMongo.find("Credits",{id:{$in:[...titles.map(x=>x.id)]}});
 
                 return resolve(credits);
+            }).catch((err)=>{
+                return reject(err);
+            });
+        });
+    }
+
+    /**
+     * Searches for movies WITH credits that match the search criteria
+     * @param {Object} titlesSearchOptions Search options for titles
+     * @param {Object} creditsSearchOptions Search options for credits
+     * @returns {Array} Array of credit objects
+     */
+     static searchTitlesCredits(titlesSearchOptions, creditsSearchOptions = null){
+        return new Promise(async (resolve,reject)=>{
+
+            // Find all the titles with this search criteria
+            findTitlesFromSearch(titlesSearchOptions,creditsSearchOptions).then(async (titles)=>{
+
+                // Find all the actors/directors for these movies
+                let credits = await jrMongo.find("Credits",{id:{$in:[...titles.map(x=>x.id)]}});
+
+                // remove the _id field from credits
+                credits = credits.map(({ _id, ...item }) => item);
+
+                // Match all the credits to the movie
+                for(let title of titles){
+                    title.credits = credits.filter(x=>x.id == title.id);
+                }
+
+                return resolve(titles);
             }).catch((err)=>{
                 return reject(err);
             });
@@ -157,15 +187,15 @@ function arrayFromString(string){
 
 /**
  * Searches the database for all matches to the passed search criteria
- * @param {Object} titlesSearchOption Search options for the Titles table
+ * @param {Object} titlesSearchOptions Search options for the Titles table
  * @param {Object} creditsSearchOptions Search options for the Credits table
  * @returns {Promise<Array<titles>>} Array containing all the tiles that match these searches
  */
-function findTitlesFromSearch(titlesSearchOption, creditsSearchOptions){
+function findTitlesFromSearch(titlesSearchOptions, creditsSearchOptions){
     return new Promise(async (resolve,reject)=>{
 
         // Check if we at least have something to search
-        if(titlesSearchOption === null && creditsSearchOptions === null){
+        if(titlesSearchOptions === null && creditsSearchOptions === null){
             return reject("No valid search criteria");
         }
 
@@ -179,8 +209,8 @@ function findTitlesFromSearch(titlesSearchOption, creditsSearchOptions){
             let refinedCreditsSearch = {};
 
             // If we're searching for anyone
-            if(creditsSearchOptions.credit){
-                refinedCreditsSearch.name = creditsSearchOptions.credit;
+            if(creditsSearchOptions.credits){
+                refinedCreditsSearch.name = creditsSearchOptions.credits;
             }
 
             // If we're searching for specifically an actor
@@ -198,13 +228,18 @@ function findTitlesFromSearch(titlesSearchOption, creditsSearchOptions){
             // Get the credits
             credits = await jrMongo.find("Credits",refinedCreditsSearch);
 
+            // If there's no titles Search options then create the object
+            if(titlesSearchOptions === null){
+                titlesSearchOptions = {};
+            }
+
             // Build the search ids
-            titlesSearchOption.id = {$in:[...credits.map(x=>x.id)]};
+            titlesSearchOptions.id = {$in:[...credits.map(x=>x.id)]};
 
         }
 
         // Search for the titles
-        titles = await jrMongo.find("Titles",titlesSearchOption);
+        titles = await jrMongo.find("Titles",titlesSearchOptions);
 
         
         return resolve(titles.map(({ _id, ...item }) => item));

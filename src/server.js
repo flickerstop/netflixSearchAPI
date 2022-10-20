@@ -32,6 +32,7 @@ databaseManager.createDB();
 ************************************************************/
 
 // let movieContentOptions = {
+//     isExactMatch : Boolean,
 //     title,
 //     type,
 //     release_year,
@@ -54,7 +55,7 @@ app.route(`/NetflixAPI/titles`).post(async (req, res) => {
     res.type(`application/json`);
 
     // Execute the search for this content
-    searchManager.executeTitles(req.body).then((searchData)=>{
+    searchManager.getTitles(req.body).then((searchData)=>{
         res.send(searchData);
     }).catch((err)=>{
         res.send(`Unable to process search: ${err}`);
@@ -68,7 +69,7 @@ app.route(`/NetflixAPI/credits`).post(async (req, res) => {
     res.type(`application/json`);
 
     // Execute the search for this content
-    searchManager.executeCredits(req.body,false).then((searchData)=>{
+    searchManager.getCredits(req.body,false).then((searchData)=>{
         res.send(searchData);
     }).catch((err)=>{
         res.send(`Unable to process search: ${err}`);
@@ -79,57 +80,41 @@ app.route(`/NetflixAPI/credits`).post(async (req, res) => {
 ** GET
 *************************/
 
-// Retrieve show or movie by title.
+// 1. Retrieve show or movie by title.
 app.get("/NetflixAPI/titles/byTitle/:titleName",async (req, res)=>{
     res.type(`application/json`);
 
     // Execute the search for this content
-    searchManager.executeTitles({title: req.params.titleName}).then((searchData)=>{
+    searchManager.getTitles({title: req.params.titleName, isExactMatch:true}).then((searchData)=>{
         res.send(searchData);
     }).catch((err)=>{
         res.send(`Unable to process search: ${err}`);
     });
 });
 
-
-// Retrieve list of shows and movies by actor name.
-app.get("/NetflixAPI/titles/byCredit/:creditName",async (req, res)=>{
-    res.type(`application/json`);
-
-    // Execute the search for this content
-    searchManager.executeTitles({credit: req.params.creditName}).then((searchData)=>{
-        res.send(searchData);
-    }).catch((err)=>{
-        res.send(`Unable to process search: ${err}`);
-    });
-});
-
-
-// Retrieve list of actors and directors for a show or movie by title.
+// 2. Retrieve list of actors and directors for a show or movie by title.
 app.get("/NetflixAPI/credits/byTitle/:titleName",async (req, res)=>{
     res.type(`application/json`);
 
     // Execute the search for this content
-    searchManager.executeCredits({title: req.params.titleName},false).then((searchData)=>{
+    searchManager.getCredits({title: req.params.titleName, isExactMatch:true},false).then((searchData)=>{
         res.send(searchData);
     }).catch((err)=>{
         res.send(`Unable to process search: ${err}`);
     });
 });
 
-
-// Retrieve list of actors and directors for a show or movie by actor or director.
-app.get("/NetflixAPI/credits/byCredit/:creditName",async (req, res)=>{
+// 3. Retrieve list of shows and movies by actor name.
+app.get("/NetflixAPI/titles/byActor/:actorName",async (req, res)=>{
     res.type(`application/json`);
 
     // Execute the search for this content
-    searchManager.executeCredits({credit: req.params.creditName},false).then((searchData)=>{
+    searchManager.getTitles({actor: req.params.actorName, isExactMatch:true}).then((searchData)=>{
         res.send(searchData);
     }).catch((err)=>{
         res.send(`Unable to process search: ${err}`);
     });
 });
-
 
 
 /***********************************************************

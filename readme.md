@@ -7,12 +7,12 @@ npm install
 ```
 Also requires MongoDB running on localhost on port 27017 but that can be changed in `src/modules/databaseManager.js`.
 
-### Run the Server
+### Run the app
 ```
 npm start
 ```
 
-### Run the Test Requests
+### Run the tests
 ```
 npm test
 ```
@@ -33,28 +33,28 @@ The REST API can be access two ways. The first is by GET which is much simpler b
 /NetflixAPI/titles/byTitle/title_of_show_or_movie
 ```
 
-##### By credits
+##### By Actor
 ```
-/NetflixAPI/titles/byCredit/actor_or_director_name
+/NetflixAPI/titles/byActor/actor_name
 ```
 #### Response
 ```
 [{
-    id,
-    title,
-    type,
-    description,
-    release_year,
-    age_certification,
-    runetime,
-    genres[],
-    production_countries[],
-    seasons,
-    imdb_id,
-    imdb_score,
-    imdb_votes,
-    tmdb_popularity,
-    tmdb_score
+    id: The title ID on JustWatch
+    title: The name of the show/movie
+    type: Either "MOVIE" or "SHOW"
+    description: A brief description
+    release_year: The release year
+    age_certification: The age certification
+    runtime: The length of the episode (SHOW) or movie
+    genres[]: A list of genres
+    production_countries[]: A list of countries that produced the title
+    seasons: Number of seasons if it's a SHOW
+    imdb_id: The title ID on IMDB
+    imdb_score: Score on IMDB
+    imdb_votes: Votes on IMDB
+    tmdb_popularity: Popularity on TMDB
+    tmdb_score: Score on TMDB
 }]
 ```
 
@@ -67,17 +67,28 @@ The REST API can be access two ways. The first is by GET which is much simpler b
 /NetflixAPI/credits/byTitle/title_of_show_or_movie
 ```
 
-##### By credits
-```
-/NetflixAPI/credits/byCredit/actor_or_director_name
-```
 #### Response
 ```
 [{
-    person_id,
-    id,
-    name,
-    character,
-    role
+    person_id: The person ID on JustWatch.
+    id: The title ID on JustWatch.
+    name: The actor or director's name.
+    character: The character name.
+    role: ACTOR or DIRECTOR.
 }]
 ```
+
+# POST
+POST allows the ability to filter using JSON in the content. Each property is optional
+### Filters
+| Property          | Type                    | Description                                                     | Example                        |
+|-------------------|-------------------------|-----------------------------------------------------------------|--------------------------------|
+| isExactMatch      | Boolean                 | Should this search only allow exact matches. Defaults to false. | `{isExactMatch: true}`         |
+| title             | String                  | Only show titles that include or exactly match this title.      | `{title: "Breaking Bad"}`      |
+| type              | String                  | Either "SHOW" or "MOVIE".                                       | `{type: "SHOW"}`               |
+| release_year      | String \| Number        | Released in this year.                                          | `{release_year: 1970}`         |
+| age_certification | String                  | Must be this age certification.                                 | `{age_certification: "R"}`     |
+| genres            | String \| Array<String> | Titles with these genres.                                       | `{genres: ["drama","crime"]}`  |
+| credits           | String                  | This person must be credited.                                   | `{credits: "Spike Lee"}`       |
+| actor             | String                  | This person must be an actor.                                   | `{actor: "Bryan Cranston"}`    |
+| director          | String                  | This person must be a director.                                 | `{director: "John Carpenter"}` |
