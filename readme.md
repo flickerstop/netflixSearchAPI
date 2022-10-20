@@ -80,7 +80,7 @@ The REST API can be access two ways. The first is by GET which is much simpler b
 ```
 
 # POST
-POST allows the ability to filter using JSON in the content. Each property is optional
+POST allows the ability to filter using JSON in the content. Each property is optional and multiple can be added together for increased filtering.
 ### Filters
 | Property            | Type                    | Description                                                     | Example                        |
 |---------------------|-------------------------|-----------------------------------------------------------------|--------------------------------|
@@ -98,6 +98,13 @@ POST allows the ability to filter using JSON in the content. Each property is op
 #### Request
 ```
 /NetflixAPI/titles
+```
+#### Request Example Filters
+```
+{
+    director: "Spike Lee",
+    age_certification:"R"
+}
 ```
 #### Response
 ```
