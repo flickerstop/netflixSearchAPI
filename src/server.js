@@ -31,18 +31,6 @@ databaseManager.createDB();
 ** Routing
 ************************************************************/
 
-// let movieContentOptions = {
-//     isExactMatch : Boolean,
-//     title,
-//     type,
-//     release_year,
-//     age_certification,
-//     genres,
-//     credit,
-//     actor,
-//     director
-// }
-
 
 /************************
 ** POST
