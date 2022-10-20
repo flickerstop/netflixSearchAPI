@@ -1,5 +1,5 @@
 # Netflix simple API
-This is a Node.js REST API built based on the data provided by [kaggle datasets](https://www.kaggle.com/datasets/victorsoeiro/netflix-tv-shows-and-movies). Both GET and POST are supported for different features. This created using Node.js with Express.js for hosting and MongoDB for the database.
+This is a Movie/Show/Actor searching REST API built on the data provided by [kaggle datasets](https://www.kaggle.com/datasets/victorsoeiro/netflix-tv-shows-and-movies). Both GET and POST are supported for different features. This created using Node.js with Express.js for hosting and MongoDB for the database.
 
 ### Install
 ```
