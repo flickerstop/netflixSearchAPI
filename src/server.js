@@ -6,32 +6,8 @@ const http = require('http');
 const console = require("./modules/personal/jrConsole");
 const fs = require("fs-extra");
 
-const mongo = require("./modules/mongo");
-
-
-
-let options = null;
-if(true){ // if testing at home
-    console.test("Entering test mode");
-    isTestMode = true;
-}else{
-    // Set the options to use SSL keys
-    options = {
-        cert: fs.readFileSync('fullchain.pem'),
-        key: fs.readFileSync('privkey.pem')
-    }
-}
-
-/**
- * 
- * The user should be able to perform the following actions:
- *      Retrieve show or movie by title.
- *      Retrieve list of actors and directors for a show or movie by title.
- *      Retrieve list of shows and movies by actor name.
- *   Bonus:
- *      Filter results by one or more attributes
- * 
- */
+const databaseManager = require("./modules/databaseManager");
+const searchManager = require("./modules/searchManager");
 
 
 
@@ -48,45 +24,111 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.urlencoded({ extended: true , limit: '8mb'}));
 
 // Create the database
-mongo.createDB();
+databaseManager.createDB();
 
 
 /***********************************************************
 ** Routing
 ************************************************************/
 
-let contentOptions = {
-    
-}
+// let movieContentOptions = {
+//     title,
+//     type,
+//     release_year,
+//     age_certification,
+//     genres,
+//     credit,
+//     actor,
+//     director
+// }
 
 
-// Route the /netflix to this API
-app.route(`/NetflixAPI`).post((req, res) => {
+/************************
+** POST
+*************************/
 
-    console.object(req.body);
-    // FIXME
-    res.send("hi");
+/**
+ * Use POST to request specific data from the API and get an array of titles as a return
+ */
+app.route(`/NetflixAPI/titles`).post(async (req, res) => {
+    res.type(`application/json`);
+
+    // Execute the search for this content
+    searchManager.execute(req.body).then((searchData)=>{
+        res.send(searchData);
+    }).catch((err)=>{
+        res.send(`Unable to process search: ${err}`);
+    });
+});
+
+/**
+ * Use POST to request specific data from the API and get an array of credits as a return
+ */
+app.route(`/NetflixAPI/credits`).post(async (req, res) => {
+    res.type(`application/json`);
+
+    // Execute the search for this content
+    searchManager.execute(req.body,false).then((searchData)=>{
+        res.send(searchData);
+    }).catch((err)=>{
+        res.send(`Unable to process search: ${err}`);
+    });
+});
+
+/************************
+** GET
+*************************/
+
+// Retrieve show or movie by title.
+app.get("/NetflixAPI/titles/byTitle/:titleName",async (req, res)=>{
+    res.type(`application/json`);
+
+    // Execute the search for this content
+    searchManager.execute({title: req.params.titleName}).then((searchData)=>{
+        res.send(searchData);
+    }).catch((err)=>{
+        res.send(`Unable to process search: ${err}`);
+    });
 });
 
 
-// app.get("/sales/:itemType/:itemName",(url)=>{
-//     return new Promise(async function(resolve, reject) {
+// Retrieve list of shows and movies by actor name.
+app.get("/NetflixAPI/titles/byCredit/:creditName",async (req, res)=>{
+    res.type(`application/json`);
 
-//         dbManager.getItemData(url.urlParameters.itemType,url.urlParameters.itemName).then((res)=>{
-//             let html = htmlBuilder.startBuild()
-//                 .replaceTag("PAGE_TITLE","Meteor Scroll")
-//                 .replaceTag("JSON_DATA",`<script>let jsonData = ${JSON.stringify(res)};</script>`)
-//                 .generate();
+    // Execute the search for this content
+    searchManager.execute({credit: req.params.creditName}).then((searchData)=>{
+        res.send(searchData);
+    }).catch((err)=>{
+        res.send(`Unable to process search: ${err}`);
+    });
+});
 
 
+// Retrieve list of actors and directors for a show or movie by title.
+app.get("/NetflixAPI/credits/byTitle/:titleName",async (req, res)=>{
+    res.type(`application/json`);
 
-//             return resolve(html); 
-//         }).catch((err)=>{
-//             console.error("Finding url data",err);
-//         });
-//     });
-// });
+    // Execute the search for this content
+    searchManager.execute({title: req.params.titleName},false).then((searchData)=>{
+        res.send(searchData);
+    }).catch((err)=>{
+        res.send(`Unable to process search: ${err}`);
+    });
+});
 
+
+// Retrieve list of actors and directors for a show or movie by actor or director.
+app.get("/NetflixAPI/credits/byCredit/:creditName",async (req, res)=>{
+    res.type(`application/json`);
+
+    // Execute the search for this content
+    searchManager.execute({credit: req.params.creditName},false).then((searchData)=>{
+        res.send(searchData);
+    }).catch((err)=>{
+        res.send(`Unable to process search: ${err}`);
+    });
+});
 
 
 
@@ -95,10 +137,11 @@ app.route(`/NetflixAPI`).post((req, res) => {
 ************************************************************/
 
 // Create the Https server
-https.createServer(options, app).listen(443);
+https.createServer(null, app).listen(443);
 
 // Create the http server
-if(isTestMode){
+// Used for local hosting so forwarding http to https is not required
+if(true){
     console.log("Starting server on port 80");
     http.createServer(app).listen(80);
 }else{
