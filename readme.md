@@ -7,12 +7,12 @@ npm install
 ```
 Also requires MongoDB running on localhost on port 27017 but that can be changed in `src/modules/databaseManager.js`.
 
-### Run the app
+### Run the Server
 ```
 npm start
 ```
 
-### Run the tests
+### Run the Test Requests
 ```
 npm test
 ```

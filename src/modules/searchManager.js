@@ -69,7 +69,7 @@ module.exports = class{
         }
 
         // Check to make sure something was added as a search
-        if(Object.keys(titleSearchOptions).length === 0){
+        if(Object.keys(titleSearchOptions).length === 0 && Object.keys(creditSearchOptions).length === 0){
             titleSearchOptions = null;
         }
 
@@ -84,31 +84,40 @@ module.exports = class{
     /**
      * Builds and executes a search on the database
      * @param {Object} content Object containing properties following the API rules
-     * @param {Boolean} isTitles Should the result be titles?
      * @returns {Promise<Array>} Array of titles or credits that match the search
      */
-    static execute(content,isTitles = true){
+    static executeTitles(content){
         return new Promise(async (resolve,reject)=>{
             // Build the search options
             let searchOptions = this.build(content);
 
 
-            // If this search is for titles
-            if(isTitles){
-                // Search the database for all the tiles that match the search criteria
-                databaseManager.searchTitles(searchOptions.titles,searchOptions.credits).then((searchData)=>{
-                    return resolve(searchData);
-                }).catch((err)=>{
-                    return reject(err);
-                });
-            }else{
-                // Search the database for all the credits that match the search criteria
-                databaseManager.searchCredits(searchOptions.titles,searchOptions.credits).then((searchData)=>{
-                    return resolve(searchData);
-                }).catch((err)=>{
-                    return reject(err);
-                });
-            }
+            // Search the database for all the tiles that match the search criteria
+            databaseManager.searchTitles(searchOptions.titles,searchOptions.credits).then((searchData)=>{
+                return resolve(searchData);
+            }).catch((err)=>{
+                return reject(err);
+            });
+
+        });
+    }
+
+    /**
+     * Builds and executes a search on the database
+     * @param {Object} content Object containing properties following the API rules
+     * @returns {Promise<Array>} Array of titles or credits that match the search
+     */
+     static executeCredits(content){
+        return new Promise(async (resolve,reject)=>{
+            // Build the search options
+            let searchOptions = this.build(content);
+
+            // Search the database for all the credits that match the search criteria
+            databaseManager.searchCredits(searchOptions.titles,searchOptions.credits).then((searchData)=>{
+                return resolve(searchData);
+            }).catch((err)=>{
+                return reject(err);
+            });
 
         });
     }

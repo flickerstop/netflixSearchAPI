@@ -54,7 +54,7 @@ app.route(`/NetflixAPI/titles`).post(async (req, res) => {
     res.type(`application/json`);
 
     // Execute the search for this content
-    searchManager.execute(req.body).then((searchData)=>{
+    searchManager.executeTitles(req.body).then((searchData)=>{
         res.send(searchData);
     }).catch((err)=>{
         res.send(`Unable to process search: ${err}`);
@@ -68,7 +68,7 @@ app.route(`/NetflixAPI/credits`).post(async (req, res) => {
     res.type(`application/json`);
 
     // Execute the search for this content
-    searchManager.execute(req.body,false).then((searchData)=>{
+    searchManager.executeCredits(req.body,false).then((searchData)=>{
         res.send(searchData);
     }).catch((err)=>{
         res.send(`Unable to process search: ${err}`);
@@ -84,7 +84,7 @@ app.get("/NetflixAPI/titles/byTitle/:titleName",async (req, res)=>{
     res.type(`application/json`);
 
     // Execute the search for this content
-    searchManager.execute({title: req.params.titleName}).then((searchData)=>{
+    searchManager.executeTitles({title: req.params.titleName}).then((searchData)=>{
         res.send(searchData);
     }).catch((err)=>{
         res.send(`Unable to process search: ${err}`);
@@ -97,7 +97,7 @@ app.get("/NetflixAPI/titles/byCredit/:creditName",async (req, res)=>{
     res.type(`application/json`);
 
     // Execute the search for this content
-    searchManager.execute({credit: req.params.creditName}).then((searchData)=>{
+    searchManager.executeTitles({credit: req.params.creditName}).then((searchData)=>{
         res.send(searchData);
     }).catch((err)=>{
         res.send(`Unable to process search: ${err}`);
@@ -110,7 +110,7 @@ app.get("/NetflixAPI/credits/byTitle/:titleName",async (req, res)=>{
     res.type(`application/json`);
 
     // Execute the search for this content
-    searchManager.execute({title: req.params.titleName},false).then((searchData)=>{
+    searchManager.executeCredits({title: req.params.titleName},false).then((searchData)=>{
         res.send(searchData);
     }).catch((err)=>{
         res.send(`Unable to process search: ${err}`);
@@ -123,7 +123,7 @@ app.get("/NetflixAPI/credits/byCredit/:creditName",async (req, res)=>{
     res.type(`application/json`);
 
     // Execute the search for this content
-    searchManager.execute({credit: req.params.creditName},false).then((searchData)=>{
+    searchManager.executeCredits({credit: req.params.creditName},false).then((searchData)=>{
         res.send(searchData);
     }).catch((err)=>{
         res.send(`Unable to process search: ${err}`);

@@ -7,7 +7,7 @@ const console = require("./modules/personal/jrConsole");
 
 
 axios.post('http://localhost/NetflixAPI/titles', {
-    title: 4
+    actor: "Robert De Niro"
 }).then((res) => {
     console.object(res.data);
 }).catch((err)=>{
