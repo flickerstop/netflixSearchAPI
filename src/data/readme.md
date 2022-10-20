@@ -1,0 +1,1 @@
+This is based on the data provided by [kaggle datasets](https://www.kaggle.com/datasets/victorsoeiro/netflix-tv-shows-and-movies).
