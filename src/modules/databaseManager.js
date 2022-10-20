@@ -1,8 +1,8 @@
 
 const path = require("path");
-let jrMongo = require("./personal/jrMongo");
-let jrCSV = require("./personal/jrCSV");
-let console = require("./personal/jrConsole");
+const jrMongo = require("./personal/jrMongo");
+const jrCSV = require("./personal/jrCSV");
+const console = require("./personal/jrConsole");
 
 module.exports = class{
 

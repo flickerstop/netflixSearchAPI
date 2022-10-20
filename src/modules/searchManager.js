@@ -1,5 +1,5 @@
 
-let console = require("./personal/jrConsole");
+const console = require("./personal/jrConsole");
 const mongoSanitize = require('mongo-sanitize');
 const databaseManager = require("./databaseManager");
 

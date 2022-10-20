@@ -1,5 +1,5 @@
 
-let console = require("../jrConsole");
+const console = require("../jrConsole");
 
 const { MongoClient } = require("mongodb");
 
